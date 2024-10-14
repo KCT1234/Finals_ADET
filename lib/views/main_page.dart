@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
@@ -46,9 +47,7 @@ class _mainPageState extends State<mainPage> {
       }
     }
 
-    Position position = await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high,
-    );
+    Position position = await Geolocator.getCurrentPosition();
 
     setState(() {
       currentLocation = LocationModel(
@@ -135,18 +134,12 @@ class _mainPageState extends State<mainPage> {
                     minZoom: 5.0,
                     maxZoom: 23,
                     onMapReady: () {
-                      // Map is ready, set the flag to true
                       setState(() {
                         isMapReady = true;
                       });
-
-                      // Listen to map events (optional)
                       mapController.mapEventStream.listen((event) {
-                        // Handle the map events if needed
                         print("Map event occurred: $event");
                       });
-
-                      // Attempt to move to the current location when the map is ready
                       _moveToCurrentLocation();
                     },
                   ),
@@ -155,6 +148,14 @@ class _mainPageState extends State<mainPage> {
                       urlTemplate: 'https://api.mapbox.com/styles/v1/kctiru/cm0y5kdd501fx01pqbuglh9zu/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1Ijoia2N0aXJ1IiwiYSI6ImNtMHdoeGI5ZDAyNXUyc3ExN2JscW9ieTAifQ.wu7uC5TxznmmslF5u37wzw',
                       maxNativeZoom: 22,
                     ),
+                    LocationMarkerLayer(
+                      position: LocationMarkerPosition(
+                          latitude: currentLocation?.latitude ?? 0.0,
+                          longitude:  currentLocation?.longitude ?? 0.0,
+                          accuracy: 20.0
+                      ),
+                      heading: null,
+                    )
                   ],
                 ),
                 Positioned(
