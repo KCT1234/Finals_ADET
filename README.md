@@ -1,6 +1,6 @@
 # final_adet
 
-A new Flutter project.
+CS-301 Finals Flutter Project
 
 ## Getting Started
 
