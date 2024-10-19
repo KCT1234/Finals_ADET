@@ -207,7 +207,7 @@ class _mainPageState extends State<mainPage> {
           )
         ],
       ),
-      drawer: Drawer(
+      drawer: const Drawer(
         child: drawerView(),
       ),
     );

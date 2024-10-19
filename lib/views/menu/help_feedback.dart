@@ -27,7 +27,7 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
           'Help and Feedback',
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Color(0xFF831515),
+        backgroundColor: const Color(0xFF831515),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -36,7 +36,7 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
           children: [
             Text(
               'Help Topics',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Color(0xFFDF3C5F)),
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(color: const Color(0xFFDF3C5F)),
             ),
             const SizedBox(height: 8.0),
             ..._helpTopics.map((topic) => ListTile(
@@ -50,7 +50,7 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
             const SizedBox(height: 16.0),
             Text(
               'Submit Feedback',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Color(0xFFDF3C5F)),
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(color: const Color(0xFFDF3C5F)),
             ),
             const SizedBox(height: 8.0),
             TextField(
@@ -63,7 +63,7 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
                 fillColor: Color(0xFFE9E7E0),
               ),
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: () {
                 // Handle feedback submission
@@ -80,7 +80,7 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
                 }
               },
               style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white, backgroundColor: Color(0xFF224193),
+                foregroundColor: Colors.white, backgroundColor: const Color(0xFF224193),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8.0),
                 ),

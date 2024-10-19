@@ -98,10 +98,10 @@ class _AssistancePageState extends State<AssistancePage> {
                   onPressed: () {
                     // Implement contact form or assistance request functionality here / to be continue on finals
                   },
-                  child: const Text('Request Assistance'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF831515),
                   ),
+                  child: const Text('Request Assistance'),
                 ),
               ],
             ),

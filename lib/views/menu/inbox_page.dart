@@ -46,10 +46,10 @@ class _InboxPageState extends State<InboxPage> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextField(
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 hintText: 'Search messages',
-                prefixIcon: const Icon(Icons.search, color: Color(0xFF224193)),
+                prefixIcon: Icon(Icons.search, color: Color(0xFF224193)),
               ),
               onChanged: (value) {
 
@@ -63,9 +63,9 @@ class _InboxPageState extends State<InboxPage> {
                 final message = _messages[index];
                 return ListTile(
                   contentPadding: const EdgeInsets.all(8.0),
-                  title: Text(message["subject"]!, style: TextStyle(color: Color(0xFF224193))),
-                  subtitle: Text(message["sender"]! + " - " + message["snippet"]!, style: TextStyle(color: Color(0xFF6F9BD1))),
-                  trailing: Text(message["time"]!, style: TextStyle(color: Color(0xFFDF3C5F))),
+                  title: Text(message["subject"]!, style: const TextStyle(color: Color(0xFF224193))),
+                  subtitle: Text("${message["sender"]!} - ${message["snippet"]!}", style: const TextStyle(color: Color(0xFF6F9BD1))),
+                  trailing: Text(message["time"]!, style: const TextStyle(color: Color(0xFFDF3C5F))),
                   onTap: () {
 
                     Navigator.push(
@@ -86,12 +86,12 @@ class _InboxPageState extends State<InboxPage> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => ComposeMessagePage(),
+              builder: (context) => const ComposeMessagePage(),
             ),
           );
         },
-        child: const Icon(Icons.add),
         backgroundColor: const Color(0xFFDF3C5F),
+        child: const Icon(Icons.add),
       ),
     );
   }

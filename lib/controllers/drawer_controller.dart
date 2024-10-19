@@ -7,11 +7,11 @@ class drawerController extends StatelessWidget {
   final GestureTapCallback onTap;
 
   const drawerController({
-    Key? key,
+    super.key,
     required this.icon,
     required this.text,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,7 @@ class drawerController extends StatelessWidget {
               color: Colors.black.withOpacity(0.2),
               spreadRadius: 2,
               blurRadius: 4,
-              offset: Offset(0, 2), // changes position of shadow
+              offset: const Offset(0, 2), // changes position of shadow
             ),
           ],
         ),

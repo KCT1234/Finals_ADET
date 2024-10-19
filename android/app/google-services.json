@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "795750798501",
+    "project_id": "haupass-6aa5a",
+    "storage_bucket": "haupass-6aa5a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:795750798501:android:53b778c18f0671a0e1a94c",
+        "android_client_info": {
+          "package_name": "com.example.final_adet"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAkdIMRSiJhMR0A-AoR6zN5EasLub-2Gp0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
