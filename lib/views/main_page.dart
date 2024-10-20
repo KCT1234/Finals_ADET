@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:final_adet/controllers/map_controller.dart' as mapLogic; // Alias import for custom controller
 import 'package:final_adet/models/location_model.dart';
+import 'package:final_adet/models/Destination.dart';
 import 'drawer_view.dart';
 import 'package:final_adet/widgets/bar_indicator.dart';
 import 'package:final_adet/widgets/panel_search.dart';
@@ -12,56 +13,55 @@ import 'package:final_adet/widgets/recent_destination.dart';
 
 class mainPage extends StatefulWidget {
   const mainPage({super.key});
+
   @override
   State<mainPage> createState() => _mainPageState();
 }
 
 class _mainPageState extends State<mainPage> {
-  final GlobalKey<ScaffoldState> _ScreenKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _screenKey = GlobalKey<ScaffoldState>();
   final MapController mapController = MapController();
+  final mapLogic.MapController mapLogicController = mapLogic.MapController();
   LocationModel? currentLocation;
-  bool isMapReady = false; // Flag to track if the map is ready
-  bool isLocationFetched = false; // Flag to track if location is fetched
+  bool isMapReady = false;
+  bool isLocationFetched = false;
 
-  @override
-  void initState() {
-    super.initState();
-    // Set initial location fetch status to false
-    isLocationFetched = false;
-  }
+  final List<Destination> destinations = [
+    Destination(name: 'Don Juan D. Nepomuceno Building', latitude: 15.133502, longitude: 120.590243),
+    Destination(name: 'Saint Joseph Hall', latitude: 15.132736, longitude: 120.589111),
+    Destination(name: 'Sacred Heart Building', latitude: 15.131356, longitude: 120.589356),
+    Destination(name: 'Immaculate Heart Gym', latitude: 15.132015, longitude: 120.588663),
+    Destination(name: 'Mamerto G Nepo Building', latitude: 15.133047, longitude: 120.589626),
+    Destination(name: 'Peter G Nepomuceno', latitude: 15.132747, longitude: 120.590138),
+  ];
 
-  // Fetch the current location of the user
-  void getCurrentLocation() async {
-    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      _showLocationServiceDialog('Location Service Disabled', 'Please enable location services.');
+  List<LatLng> routePoints = [];
+
+  void handleSearchSelect(Destination selectedDestination) async {
+    if (currentLocation == null) {
+      _showLocationServiceDialog('Current Location Not Found', 'Please fetch your current location first.');
       return;
     }
 
-    LocationPermission permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission != LocationPermission.whileInUse && permission != LocationPermission.always) {
-        _showLocationServiceDialog('Location Permission Denied', 'Please grant location permission.');
-        return;
-      }
-    }
+    mapController.move(
+      LatLng(selectedDestination.latitude, selectedDestination.longitude),
+      18.0,
+    );
 
-    Position position = await Geolocator.getCurrentPosition();
-
-    setState(() {
-      currentLocation = LocationModel(
-        latitude: position.latitude,
-        longitude: position.longitude,
+    try {
+      final route = await mapLogicController.fetchRoute(
+        LatLng(currentLocation!.latitude, currentLocation!.longitude),
+        LatLng(selectedDestination.latitude, selectedDestination.longitude),
       );
-      isLocationFetched = true; // Location is now fetched
-    });
 
-    // Attempt to move the map only if the map is ready and the location is fetched
-    _moveToCurrentLocation();
+      setState(() {
+        routePoints = route;
+      });
+    } catch (error) {
+      _showLocationServiceDialog('Error', 'Could not fetch route. Please try again.');
+    }
   }
 
-  // Helper function to display dialogs
   void _showLocationServiceDialog(String title, String message) {
     showDialog(
       context: context,
@@ -78,12 +78,26 @@ class _mainPageState extends State<mainPage> {
     );
   }
 
-  // Move the map to the current location if both the map is ready and the location is fetched
+  void getCurrentLocation() async {
+    try {
+      LocationModel location = await mapLogicController.getCurrentLocation();
+
+      setState(() {
+        currentLocation = location;
+        isLocationFetched = true;
+      });
+
+      _moveToCurrentLocation();
+    } catch (error) {
+      _showLocationServiceDialog('Error', error.toString());
+    }
+  }
+
   void _moveToCurrentLocation() {
     if (isMapReady && isLocationFetched && currentLocation != null) {
       mapController.move(
         LatLng(currentLocation!.latitude, currentLocation!.longitude),
-        15.0,
+        18.0,
       );
     }
   }
@@ -91,7 +105,7 @@ class _mainPageState extends State<mainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _ScreenKey,
+      key: _screenKey,
       body: Stack(
         children: [
           SlidingUpPanel(
@@ -102,23 +116,25 @@ class _mainPageState extends State<mainPage> {
             panel: Container(
               decoration: const BoxDecoration(
                 color: Color.fromARGB(255, 130, 35, 35),
-                borderRadius: BorderRadius.only(topLeft:Radius.circular(24),topRight:Radius.circular(24)),
+                borderRadius: BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24)),
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   const BarIndicator(),
-                  const PanelSearch(),
+                  PanelSearch(
+                    destinations: destinations.map((d) => d.name).toList(),
+                    onSearchSelect: (selectedName) {
+                      final selectedDestination = destinations.firstWhere((d) => d.name == selectedName);
+                      handleSearchSelect(selectedDestination);
+                    },
+                  ),
                   const SizedBox(height: 16),
                   Expanded(
                     child: ListView(
-                      children: const [
-                        RecentDestinationTile(destination: 'Saint Joseph Hall', description: 'SJH-706',),
-                        RecentDestinationTile(destination: 'Sacred Heart Building', description: 'SH-105',),
-                        RecentDestinationTile(destination: 'Immaculate Heart Gym', description: 'GYM-201',),
-                        RecentDestinationTile(destination: 'Mamerto G Nepo Buiding', description: 'MGN-305',),
-                        RecentDestinationTile(destination: 'Peter G Nepomuceno', description: 'PGN-809',),
-                      ],
+                      children: destinations.map((destination) {
+                        return RecentDestinationTile(destination: destination.name, description: 'Description here');
+                      }).toList(),
                     ),
                   ),
                 ],
@@ -129,7 +145,7 @@ class _mainPageState extends State<mainPage> {
                 FlutterMap(
                   mapController: mapController,
                   options: MapOptions(
-                    initialCenter: const LatLng(15.132505, 120.589862),
+                    initialCenter: LatLng(15.132505, 120.589862),
                     initialZoom: 18.0,
                     minZoom: 5.0,
                     maxZoom: 23,
@@ -137,25 +153,31 @@ class _mainPageState extends State<mainPage> {
                       setState(() {
                         isMapReady = true;
                       });
-                      mapController.mapEventStream.listen((event) {
-                        print("Map event occurred: $event");
-                      });
                       _moveToCurrentLocation();
                     },
                   ),
                   children: [
                     TileLayer(
-                      urlTemplate: 'https://api.mapbox.com/styles/v1/kctiru/cm0y5kdd501fx01pqbuglh9zu/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1Ijoia2N0aXJ1IiwiYSI6ImNtMHdoeGI5ZDAyNXUyc3ExN2JscW9ieTAifQ.wu7uC5TxznmmslF5u37wzw',
+                      urlTemplate: 'https://api.mapbox.com/styles/v1/kctiru/cm2c3cdhl009l01poc7xihjc7/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1Ijoia2N0aXJ1IiwiYSI6ImNtMmVhaGxnczBzMmMya3NiZTNmYmc0NGsifQ.X4OpU9Ajb6UvH4DOPneHig',
                       maxNativeZoom: 22,
                     ),
                     LocationMarkerLayer(
                       position: LocationMarkerPosition(
-                          latitude: currentLocation?.latitude ?? 0.0,
-                          longitude:  currentLocation?.longitude ?? 0.0,
-                          accuracy: 20.0
+                        latitude: currentLocation?.latitude ?? 0.0,
+                        longitude: currentLocation?.longitude ?? 0.0,
+                        accuracy: 20.0,
                       ),
                       heading: null,
-                    )
+                    ),
+                    PolylineLayer(
+                      polylines: [
+                        Polyline(
+                          points: routePoints,
+                          strokeWidth: 4.0,
+                          color: Colors.blue,
+                        ),
+                      ],
+                    ),
                   ],
                 ),
                 Positioned(
@@ -175,7 +197,7 @@ class _mainPageState extends State<mainPage> {
                         color: Colors.white,
                       ),
                       alignment: Alignment.center,
-                      onPressed: () => _ScreenKey.currentState?.openDrawer(),
+                      onPressed: () => _screenKey.currentState?.openDrawer(),
                     ),
                   ),
                 ),
@@ -204,10 +226,10 @@ class _mainPageState extends State<mainPage> {
                 ),
               ],
             ),
-          )
+          ),
         ],
       ),
-      drawer: const Drawer(
+      drawer: Drawer(
         child: drawerView(),
       ),
     );

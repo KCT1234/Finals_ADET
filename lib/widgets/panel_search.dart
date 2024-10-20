@@ -1,23 +1,71 @@
 import 'package:flutter/material.dart';
 
-class PanelSearch extends StatelessWidget {
-  const PanelSearch({super.key});
+class PanelSearch extends StatefulWidget {
+  final List<String> destinations;
+  final ValueChanged<String> onSearchSelect;
+  // final VoidCallback onSearchActivated;
+
+  const PanelSearch({
+    Key? key,
+    required this.destinations,
+    required this.onSearchSelect,
+    // required this.onSearchActivated,
+  }) : super(key: key);
+
+  @override
+  _PanelSearchState createState() => _PanelSearchState();
+}
+
+class _PanelSearchState extends State<PanelSearch> {
+  final TextEditingController _searchController = TextEditingController();
+  List<String> _suggestions = [];
+
+  void _onSearchChanged(String query) {
+    // Activate the search
+    if (query.isNotEmpty) {
+      // widget.onSearchActivated();
+    }
+
+    // Filter destinations based on the search query
+    if (query.isNotEmpty) {
+      _suggestions = widget.destinations
+          .where((destination) => destination.toLowerCase().contains(query.toLowerCase()))
+          .toList();
+    } else {
+      _suggestions = [];
+    }
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      child: TextField(
-        decoration: InputDecoration(
-          filled: true,
-          fillColor: Colors.white,
-          labelText: 'Where To?',
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30),
+    return Column(
+      children: [
+        TextField(
+          controller: _searchController,
+          decoration: InputDecoration(
+            hintText: 'Search destinations...',
+            border: OutlineInputBorder(),
           ),
-          prefixIcon: const Icon(Icons.search),
+          onChanged: _onSearchChanged,
         ),
-      ),
+        if (_suggestions.isNotEmpty)
+          ListView.builder(
+            shrinkWrap: true,
+            itemCount: _suggestions.length,
+            itemBuilder: (context, index) {
+              return ListTile(
+                title: Text(_suggestions[index]),
+                onTap: () {
+                  widget.onSearchSelect(_suggestions[index]);
+                  _searchController.clear(); // Clear input on selection
+                  _suggestions.clear(); // Clear suggestions
+                  setState(() {});
+                },
+              );
+            },
+          ),
+      ],
     );
   }
 }
