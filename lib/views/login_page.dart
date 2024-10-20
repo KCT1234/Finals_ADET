@@ -11,39 +11,59 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   String? _errorMessage;
 
+  // Helper method to validate email format
+  bool _isValidEmail(String email) {
+    final RegExp emailRegExp = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+    return emailRegExp.hasMatch(email);
+  }
+
   void _login() async {
-  setState(() {
-    _errorMessage = null; // Reset error message
-  });
-
-  if (_usernameController.text.isEmpty || _passwordController.text.isEmpty) {
     setState(() {
-      _errorMessage = 'Please enter both username and password.';
+      _errorMessage = null; // Reset error message
     });
-    return;
-  }
 
-  try {
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: _usernameController.text,
-      password: _passwordController.text,
-    );
-    // Navigate to the main page after successful login
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const mainPage()),
-    );
-  } on FirebaseAuthException catch (e) {
-    setState(() {
-      _errorMessage = e.message;
-    });
-  }
-}
+    if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
+      setState(() {
+        _errorMessage = 'Please enter both email and password.';
+      });
+      return;
+    }
 
+    // Check if email format is valid
+    if (!_isValidEmail(_emailController.text)) {
+      setState(() {
+        _errorMessage = 'Please enter a valid email address.';
+      });
+      return;
+    }
+
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: _emailController.text,
+        password: _passwordController.text,
+      );
+      // Navigate to the main page after successful login
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const mainPage()),
+      );
+    } on FirebaseAuthException catch (e) {
+      // Handle specific Firebase exceptions
+      setState(() {
+        if (e.code == 'user-not-found') {
+          _errorMessage = 'There is no email created with that.';
+        } else if (e.code == 'wrong-password') {
+          _errorMessage = 'Incorrect password. Please try again.';
+        } else {
+          _errorMessage = e.message; // Show general Firebase error
+        }
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -98,16 +118,17 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         const SizedBox(height: 16.0),
                         TextField(
-                          controller: _usernameController,
+                          controller: _emailController,
                           decoration: InputDecoration(
                             filled: true,
                             fillColor: Colors.white,
-                            labelText: 'Username',
-                            prefixIcon: const Icon(Icons.person_outline_rounded),
+                            labelText: 'Email',
+                            prefixIcon: const Icon(Icons.email_outlined),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.0),
                             ),
                           ),
+                          keyboardType: TextInputType.emailAddress,
                         ),
                         const SizedBox(height: 16.0),
                         TextField(
@@ -118,7 +139,6 @@ class _LoginScreenState extends State<LoginScreen> {
                             fillColor: Colors.white,
                             labelText: 'Password',
                             prefixIcon: const Icon(Icons.fingerprint),
-
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.0),
                             ),
