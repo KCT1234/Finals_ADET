@@ -145,7 +145,7 @@ class _mainPageState extends State<mainPage> {
                 FlutterMap(
                   mapController: mapController,
                   options: MapOptions(
-                    initialCenter: LatLng(15.132505, 120.589862),
+                    initialCenter: const LatLng(15.132505, 120.589862),
                     initialZoom: 18.0,
                     minZoom: 5.0,
                     maxZoom: 23,
@@ -229,7 +229,7 @@ class _mainPageState extends State<mainPage> {
           ),
         ],
       ),
-      drawer: Drawer(
+      drawer: const Drawer(
         child: drawerView(),
       ),
     );

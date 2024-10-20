@@ -45,7 +45,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final _formKey = GlobalKey<FormState>();
+    final formKey = GlobalKey<FormState>();
 
     return Scaffold(
       body: Column(
@@ -86,7 +86,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   child: Padding(
                     padding: const EdgeInsets.all(32.0),
                     child: Form(
-                      key: _formKey, //form key
+                      key: formKey, //form key
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -155,7 +155,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ],
                           ElevatedButton(
                             onPressed: () {
-                              if (_formKey.currentState!.validate()) {
+                              if (formKey.currentState!.validate()) {
                                 _signUp();
                               }
                             },

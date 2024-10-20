@@ -6,11 +6,11 @@ class PanelSearch extends StatefulWidget {
   // final VoidCallback onSearchActivated;
 
   const PanelSearch({
-    Key? key,
+    super.key,
     required this.destinations,
     required this.onSearchSelect,
     // required this.onSearchActivated,
-  }) : super(key: key);
+  });
 
   @override
   _PanelSearchState createState() => _PanelSearchState();
@@ -43,7 +43,7 @@ class _PanelSearchState extends State<PanelSearch> {
       children: [
         TextField(
           controller: _searchController,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             hintText: 'Search destinations...',
             border: OutlineInputBorder(),
           ),
