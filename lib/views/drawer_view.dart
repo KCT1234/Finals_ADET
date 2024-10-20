@@ -1,22 +1,27 @@
-import 'package:final_adet/views/login_page.dart';
-import 'package:final_adet/controllers/drawer_controller.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:final_adet/views/login_page.dart';
+import 'package:final_adet/controllers/drawer_controller.dart';
 
 class drawerView extends StatelessWidget {
   const drawerView({super.key});
 
   @override
   Widget build(BuildContext context) {
+    User? user = FirebaseAuth.instance.currentUser; // Get the current user
+    String userName = user != null ? user.email!.split('@')[0] : 'Adet Student'; // Default to 'Adet Student' if no user
+    String userEmail = user != null ? user.email! : 'adetstudent00@mail.com'; // Default email
+
     return SafeArea(
       child: Column(
         children: [
           Container(
             color: const Color.fromARGB(255, 130, 35, 35),
             padding: const EdgeInsets.all(16.0),
-            child: const Row(
+            child: Row(
               children: [
-                CircleAvatar(
+                const CircleAvatar(
                   radius: 30,
                   backgroundColor: Colors.white,
                   child: Icon(
@@ -25,21 +30,21 @@ class drawerView extends StatelessWidget {
                     color: Color.fromARGB(255, 130, 35, 35),
                   ),
                 ),
-                SizedBox(width: 16),
+                const SizedBox(width: 16),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Adet Student',
-                      style: TextStyle(
+                      userName, // Display logged-in username
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     Text(
-                      'adetstudent00@mail.com',
-                      style: TextStyle(
+                      userEmail, // Display logged-in user's email
+                      style: const TextStyle(
                         color: Colors.white70,
                         fontSize: 14,
                       ),
@@ -51,7 +56,6 @@ class drawerView extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           Expanded(
-            // Using ListView to make content scrollable
             child: ListView(
               padding: EdgeInsets.zero,
               children: <Widget>[
@@ -107,14 +111,15 @@ class drawerView extends StatelessWidget {
               ],
             ),
           ),
-          // Place the logout button at the bottom, but still scrollable if needed
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const LoginScreen()));
+              onPressed: () async {
+                await FirebaseAuth.instance.signOut(); // Sign out the user
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const LoginScreen()), // Redirect to login page
+                );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red[700],
@@ -139,4 +144,3 @@ class drawerView extends StatelessWidget {
     );
   }
 }
-
