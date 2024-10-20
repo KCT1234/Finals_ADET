@@ -26,7 +26,7 @@ class MessageSearch extends SearchDelegate {
   @override
   Widget buildResults(BuildContext context) {
     // Implement search results here
-    return Center(
+    return const Center(
       child: Text('Search Results', style: TextStyle(color: Color(0xFF6F9BD1))), // Light Blue
     );
   }
@@ -34,7 +34,7 @@ class MessageSearch extends SearchDelegate {
   @override
   Widget buildSuggestions(BuildContext context) {
     // Implement search suggestions here
-    return Center(
+    return const Center(
       child: Text('Search Suggestions', style: TextStyle(color: Color(0xFF6F9BD1))), // Light Blue
     );
   }
