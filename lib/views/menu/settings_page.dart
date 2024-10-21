@@ -11,7 +11,6 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   // Default selected map style
-
   // List of map style
 
   @override
@@ -31,9 +30,7 @@ class _SettingsPageState extends State<SettingsPage> {
           _buildSettingsTile(
             title: 'Edit Profile',
             icon: CupertinoIcons.person,
-            onTap: () {
-              Navigator.pushNamed(context, '/editProfile');
-            },
+            onTap: _showEditProfileDialog,
           ),
           _buildSettingsTile(
             title: 'Change Password',
@@ -197,6 +194,74 @@ class _SettingsPageState extends State<SettingsPage> {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                         content: Text('An error occurred. Please try again.')),
+                  );
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showEditProfileDialog() {
+    final _nameController = TextEditingController();
+    User? user = FirebaseAuth.instance.currentUser;
+
+    // Set initial value of the name controller
+    _nameController.text =
+        user?.displayName ?? user?.email?.split('@')[0] ?? 'Adet Student';
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Edit Profile'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: _nameController,
+                decoration: InputDecoration(
+                  labelText: 'Name',
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            ElevatedButton(
+              child: Text('Update Profile'),
+              onPressed: () async {
+                // Show loading indicator
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (BuildContext context) {
+                    return Center(child: CircularProgressIndicator());
+                  },
+                );
+
+                try {
+                  if (user != null) {
+                    await user.updateDisplayName(_nameController.text);
+                    Navigator.of(context).pop(); // Dismiss loading indicator
+                    Navigator.of(context).pop(); // Dismiss edit profile dialog
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Profile updated successfully')),
+                    );
+                  }
+                } catch (e) {
+                  Navigator.of(context).pop(); // Dismiss loading indicator
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                        content: Text(
+                            'Failed to update profile. Please try again.')),
                   );
                 }
               },
