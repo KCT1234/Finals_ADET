@@ -15,7 +15,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
   String? _errorMessage;
 
-  // Helper method to validate email format
   bool _isValidEmail(String email) {
     final RegExp emailRegExp = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
     return emailRegExp.hasMatch(email);
@@ -33,7 +32,6 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
-    // Check if email format is valid
     if (!_isValidEmail(_emailController.text)) {
       setState(() {
         _errorMessage = 'Please enter a valid email address.';
@@ -46,13 +44,11 @@ class _LoginScreenState extends State<LoginScreen> {
         email: _emailController.text,
         password: _passwordController.text,
       );
-      // Navigate to the main page after successful login
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const mainPage()),
       );
     } on FirebaseAuthException catch (e) {
-      // Handle specific Firebase exceptions
       setState(() {
         if (e.code == 'user-not-found') {
           _errorMessage = 'There is no email created with that.';
@@ -89,7 +85,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                 ),
-                // Bottom half with rounded rectangle container
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.55,
                   child: Container(
@@ -120,12 +115,20 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                               ),
                               const SizedBox(height: 16.0),
+                              // Static Text for Email
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: const Text(
+                                  'Email',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
                               TextField(
                                 controller: _emailController,
                                 decoration: InputDecoration(
                                   filled: true,
-                                  fillColor: Colors.white,
-                                  labelText: 'Email',
+                                  fillColor : Colors.white,
+                                  hintText: 'Email', // Set hint text for email
                                   prefixIcon: const Icon(Icons.email_outlined),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10.0),
@@ -134,13 +137,21 @@ class _LoginScreenState extends State<LoginScreen> {
                                 keyboardType: TextInputType.emailAddress,
                               ),
                               const SizedBox(height: 16.0),
+                              // Static Text for Password
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: const Text(
+                                  'Password',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
                               TextField(
                                 controller: _passwordController,
                                 obscureText: true,
                                 decoration: InputDecoration(
                                   filled: true,
                                   fillColor: Colors.white,
-                                  labelText: 'Password',
+                                  hintText: 'Password', // Set hint text for password
                                   prefixIcon: const Icon(Icons.fingerprint),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10.0),
@@ -163,10 +174,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                 style: ElevatedButton.styleFrom(
                                   padding: const EdgeInsets.symmetric(horizontal: 48.0, vertical: 12.0),
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
+                                    borderRadius: BorderRadius.circular(5.0),
                                   ),
+                                  backgroundColor: Colors.black, // Set button background color to black
                                 ),
-                                child: const Text('Login'),
+                                child: const Text(
+                                  'Login',
+                                  style: TextStyle(color: Colors.white), // Set button text color to white
+                                ),
                               ),
                               const SizedBox(height: 16.0),
                               TextButton(
