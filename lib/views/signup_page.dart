@@ -12,6 +12,7 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
   String? _errorMessage;
 
   void _signUp() async {
@@ -45,15 +46,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final _formKey = GlobalKey<FormState>();
-
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
             children: [
-              // Logo and top content
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.45,
                 child: Container(
@@ -90,7 +88,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       child: Padding(
                         padding: const EdgeInsets.all(32.0),
                         child: Form(
-                          key: _formKey, // Form key for validation
+                          key: _formKey,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
