@@ -102,21 +102,29 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 ),
                               ),
                               const SizedBox(height: 16.0),
+                              // Static Text for Email
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: const Text(
+                                  'Email',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
                               TextFormField(
                                 controller: _emailController,
                                 decoration: InputDecoration(
                                   filled: true,
                                   fillColor: Colors.white,
-                                  labelText: 'Email',
+                                  hintText: 'Email', // Set hint text for email
                                   prefixIcon: const Icon(Icons.email_outlined),
                                   border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
+                                    borderRadius: BorderRadius.circular(12.0),
                                   ),
                                 ),
                                 keyboardType: TextInputType.emailAddress,
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
-                                    return 'Please enter an email';
+                                    return 'Email';
                                   }
                                   if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
                                     return 'Please enter a valid email address';
@@ -125,21 +133,29 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 },
                               ),
                               const SizedBox(height: 16.0),
+                              // Static Text for Password
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: const Text(
+                                  'Password',
+                                  style : TextStyle(color: Colors.white),
+                                ),
+                              ),
                               TextFormField(
                                 controller: _passwordController,
                                 obscureText: true,
                                 decoration: InputDecoration(
                                   filled: true,
                                   fillColor: Colors.white,
-                                  labelText: 'Password',
+                                  hintText: 'Password', // Set hint text for password
                                   prefixIcon: const Icon(Icons.fingerprint),
                                   border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
+                                    borderRadius: BorderRadius.circular(12.0),
                                   ),
                                 ),
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
-                                    return 'Please enter a password';
+                                    return 'Please enter a Password';
                                   }
                                   return null;
                                 },
@@ -164,10 +180,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 style: ElevatedButton.styleFrom(
                                   padding: const EdgeInsets.symmetric(horizontal: 48.0, vertical: 12.0),
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
+                                    borderRadius: BorderRadius.circular(5.0),
                                   ),
+                                  backgroundColor: Colors.black, // Set button background color to black
                                 ),
-                                child: const Text('Sign Up'),
+                                child: const Text(
+                                  'Sign Up',
+                                  style: TextStyle(color: Colors.white), // Set button text color to white
+                                ),
                               ),
                               const SizedBox(height: 16.0),
                               TextButton(
