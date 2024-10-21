@@ -32,7 +32,11 @@ class _mainPageState extends State<mainPage> {
     Destination(name: 'Sacred Heart Building', latitude: 15.131356, longitude: 120.589356),
     Destination(name: 'Immaculate Heart Gym', latitude: 15.132015, longitude: 120.588663),
     Destination(name: 'Mamerto G Nepo Building', latitude: 15.133047, longitude: 120.589626),
-    Destination(name: 'Peter G Nepomuceno', latitude: 15.132747, longitude: 120.590138),
+    Destination(name: 'Peter G Nepomuceno Building', latitude: 15.132747, longitude: 120.590138),
+    Destination(name: 'Archbishop Pedro Santos Building', latitude: 15.131825, longitude: 120.589881),
+    Destination(name: 'Geromin G Nepomuceno Building', latitude: 15.131818, longitude: 120.590599),
+    Destination(name: 'Chapel of the Holy Guardian', latitude: 15.132405, longitude: 120.589639),
+    Destination(name: 'Sister Josefina Nepomuceno Formation Center', latitude: 15.132045, longitude: 120.589195),
   ];
 
   List<LatLng> routePoints = [];
