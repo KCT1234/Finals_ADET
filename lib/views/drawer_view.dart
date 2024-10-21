@@ -13,12 +13,10 @@ class drawerView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    User? user = FirebaseAuth.instance.currentUser; // Get the current user
-    String userName = user != null
-        ? user.email!.split('@')[0]
-        : 'Adet Student'; // Default to 'Adet Student' if no user
-    String userEmail =
-        user != null ? user.email! : 'adetstudent00@mail.com'; // Default email
+    User? user = FirebaseAuth.instance.currentUser;
+    String userName =
+        user?.displayName ?? user?.email?.split('@')[0] ?? 'Adet Student';
+    String userEmail = user?.email ?? 'adetstudent00@mail.com'; // Default email
 
     return SafeArea(
       child: Container(
