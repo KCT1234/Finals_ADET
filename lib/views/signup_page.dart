@@ -1,4 +1,4 @@
-import 'package:final_adet/views/main_page.dart';
+import 'package:final_adet/views/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -31,10 +31,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
         email: _emailController.text,
         password: _passwordController.text,
       );
-      // Navigate to the main page after successful signup
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const mainPage()),
+        MaterialPageRoute(builder: (context) => const LoginScreen()),
       );
     } on FirebaseAuthException catch (e) {
       setState(() {

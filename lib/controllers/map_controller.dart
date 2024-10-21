@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:latlong2/latlong.dart';
 import 'package:http/http.dart' as http;
@@ -23,6 +24,7 @@ class MapController {
     }
   }
 
+  // Add this method to get the current location
   Future<LocationModel> getCurrentLocation() async {
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
@@ -32,12 +34,34 @@ class MapController {
     LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
-      if (permission != LocationPermission.whileInUse && permission != LocationPermission.always) {
-        throw Exception('Location permission denied.');
+      if (permission == LocationPermission.deniedForever) {
+        throw Exception('Location permissions are permanently denied.');
       }
     }
 
+    // Get the current position
     Position position = await Geolocator.getCurrentPosition();
     return LocationModel(latitude: position.latitude, longitude: position.longitude);
+  }
+
+  Stream<LocationModel> getLocationStream() async* {
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      throw Exception('Location services are disabled.');
+    }
+
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.deniedForever) {
+        throw Exception('Location permissions are permanently denied.');
+      }
+    }
+
+    // Start a stream of location updates
+    Stream<Position> positionStream = Geolocator.getPositionStream();
+    await for (Position position in positionStream) {
+      yield LocationModel(latitude: position.latitude, longitude: position.longitude);
+    }
   }
 }
