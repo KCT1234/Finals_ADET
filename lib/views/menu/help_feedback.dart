@@ -36,21 +36,28 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
           children: [
             Text(
               'Help Topics',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(color: const Color(0xFFDF3C5F)),
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge
+                  ?.copyWith(color: const Color(0xFFDF3C5F)),
             ),
             const SizedBox(height: 8.0),
             ..._helpTopics.map((topic) => ListTile(
-              contentPadding: EdgeInsets.zero,
-              title: Text(topic, style: const TextStyle(fontSize: 16.0)),
-              leading: const Icon(Icons.help_outline, color: Color(0xFF6F9BD1)),
-              onTap: () {
-                // Handle tap for each help topic, possibly navigate to a detailed page / to be continue on finals
-              },
-            )),
+                  contentPadding: EdgeInsets.zero,
+                  title: Text(topic, style: const TextStyle(fontSize: 16.0)),
+                  leading:
+                      const Icon(Icons.help_outline, color: Color(0xFF6F9BD1)),
+                  onTap: () {
+                    // Handle tap for each help topic, possibly navigate to a detailed page
+                  },
+                )),
             const SizedBox(height: 16.0),
             Text(
               'Submit Feedback',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(color: const Color(0xFFDF3C5F)),
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge
+                  ?.copyWith(color: const Color(0xFFDF3C5F)),
             ),
             const SizedBox(height: 8.0),
             TextField(
@@ -69,7 +76,7 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
                 // Handle feedback submission
                 final feedback = _feedbackController.text;
                 if (feedback.isNotEmpty) {
-                  // Process the feedback (e.g., send to a server or save locally) / to be continue on finlas
+                  // Process the feedback (e.g., send to a server or save locally)
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text('Feedback submitted successfully!'),
@@ -80,13 +87,40 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
                 }
               },
               style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white, backgroundColor: const Color(0xFF224193),
+                foregroundColor: Colors.white,
+                backgroundColor: const Color(0xFF224193),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8.0),
                 ),
                 elevation: 5,
               ),
               child: const Text('Submit Feedback'),
+            ),
+            const SizedBox(height: 16.0),
+            Text(
+              'For assistance, please contact us:',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            const SizedBox(height: 16.0),
+            Text(
+              'Email: support@example.com',
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+            const SizedBox(height: 8.0),
+            Text(
+              'Phone: 123-456-7890',
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+            const SizedBox(height: 16.0),
+            ElevatedButton(
+              onPressed: () {
+                // Implement contact form or assistance request functionality here
+              },
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: const Color(0xFF831515),
+              ),
+              child: const Text('Request Assistance'),
             ),
           ],
         ),
